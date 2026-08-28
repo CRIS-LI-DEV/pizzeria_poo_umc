@@ -5,5 +5,7 @@ public class Main {
 
         // Se invoca el método de la clase para imprimir los datos en la consola
         miPizza.mostrarInfo();
+
+        System.out.println("hice un cambio");
     }
 }
