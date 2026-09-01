@@ -36,7 +36,7 @@ public class Pizza {
         this.precio = precio;
     }
 
-    // Método para mostrar información
+  
     public void mostrarInfo() {
         System.out.println("--- Detalle de la Pizza ---");
         System.out.println("Variedad: " + nombre);
