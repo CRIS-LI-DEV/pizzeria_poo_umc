@@ -82,12 +82,10 @@ public class Persona {
         return this.telefono != null && !this.telefono.equals("No registrado") && this.telefono.length() >= 8;
     }
 
-    @Override
     public String toString() {
         return "RUT: " + rut + " | Nombre: " + nombre + " | Teléfono: " + telefono + " | Email: " + email;
     }
 
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
