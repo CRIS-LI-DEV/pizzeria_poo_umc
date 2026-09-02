@@ -1,5 +1,3 @@
-import java.util.Objects;
-
 public class Persona {
     private String rut;
     private String nombre;
@@ -84,19 +82,16 @@ public class Persona {
         return this.telefono != null && !this.telefono.equals("No registrado") && this.telefono.length() >= 8;
     }
 
-  
+    @Override
     public String toString() {
         return "RUT: " + rut + " | Nombre: " + nombre + " | Teléfono: " + telefono + " | Email: " + email;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Persona persona = (Persona) o;
-        return Objects.equals(rut, persona.rut);
-    }
-
-    public int hashCode() {
-        return Objects.hash(rut);
+        return rut != null ? rut.equals(persona.rut) : persona.rut == null;
     }
 }
