@@ -7,5 +7,9 @@ public class Main {
         miPizza.mostrarInfo();
 
         System.out.println("hice un cambio");
+        
+        Persona p1 = new Persona("12.345.678-9", "  Carlos Muñoz  ", "987654321", "carlos@example.com");
+        p1.mostrarContacto();
+        System.out.println("Teléfono válido: " + p1.tieneTelefonoValido());
     }
 }
