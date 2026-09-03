@@ -27,7 +27,7 @@ public class Persona {
     }
 
     public void setRut(String rut) {
-        if (rut != null && !rut.trim().isEmpty()) {
+        if (rut != null && !rut.trim().isEmpty()){
             this.rut = rut.trim();
         } else {
             this.rut = "S/R";
@@ -86,10 +86,5 @@ public class Persona {
         return "RUT: " + rut + " | Nombre: " + nombre + " | Teléfono: " + telefono + " | Email: " + email;
     }
 
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Persona persona = (Persona) o;
-        return rut != null ? rut.equals(persona.rut) : persona.rut == null;
-    }
+ 
 }

@@ -8,7 +8,7 @@ public class Main {
 
         System.out.println("hice un cambio");
 
-        Persona p1 = new Persona("12.345.678-9", "  Carlos Muñoz  ", "987654321", "carlos@example.com");
+        Persona p1 = new Persona("12.345.678-9", "  Carlos Muñoz  ", "9654321", "carlos@example.com");
         p1.mostrarContacto();
         System.out.println("Teléfono válido: " + p1.tieneTelefonoValido());
 
@@ -20,5 +20,11 @@ public class Main {
         c1.mostrarContacto();
         c1.realizarPedido();
         System.out.println(c1.toString());
+
+
+
+        System.out.println("¿p1 tiene teléfono válido? " + p1.tieneTelefonoValido());
+
+         System.out.println("¿p1 es igual a p2? " + p1.equals(r1)); 
     }
 }
