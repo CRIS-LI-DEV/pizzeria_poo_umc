@@ -22,6 +22,16 @@ Proyecto base en **Java** para la gestión de entidades de una pizzería. Contie
 
 ---
 
+### 🧬 Jerarquía de Clases (Herencia)
+
+Para organizar el código de esta entrega, diseñamos la siguiente estructura:
+
+* **`Persona` (Clase Padre):** Decidimos que esta sea la clase principal porque todos los usuarios de la pizzería comparten datos básicos. Aquí centralizamos atributos comunes como el RUT, nombre, teléfono y email.
+* **`Repartidor` (Clase Hija):** Hereda de `Persona`. Lo hicimos así porque un repartidor tiene los datos personales básicos, pero le agregamos atributos exclusivos de su trabajo, como el vehículo y la patente para hacer los despachos.
+* **`Cliente` (Clase Hija):** También hereda de `Persona`. Comparte los datos base del padre, pero le añadimos el atributo propio de `direccion`, que es necesario para saber dónde enviarle su pedido.
+
+---
+
 ### 👥 Integrantes
 
 * **CRISTIAN LILLO**

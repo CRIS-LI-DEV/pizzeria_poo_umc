@@ -15,5 +15,10 @@ public class Main {
         Repartidor r1 = new Repartidor("11.222.333-4", "Diego Becerra", "912345678", "diego@umc.com", "Moto", "AB-1234");
         r1.mostrarContacto();
         r1.registrarEntrega();
+
+                Cliente c1 = new Cliente("19.123.456-7", "Victor Torres", "998877665", "victor@umc.com", "Av. Santa Rosa N° 123 Puente Alto");
+        c1.mostrarContacto();
+        c1.realizarPedido();
+        System.out.println(c1.toString());
     }
 }
