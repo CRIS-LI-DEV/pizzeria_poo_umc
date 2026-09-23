@@ -2,6 +2,7 @@ public class Main {
     public static void main(String[] args) {
         
         Pizza miPizza = new Pizza("Pepperoni Especial", "Familiar", 12990.0);
+        Pizza miPizza1 = new Pizza("Pepperoni CARNE", "Familiar", 12990.0);
 
       
         miPizza.mostrarInfo();
@@ -23,8 +24,16 @@ public class Main {
 
 
 
-        System.out.println("¿p1 tiene teléfono válido? " + p1.tieneTelefonoValido());
 
-         System.out.println("¿p1 es igual a p2? " + p1.equals(r1)); 
+
+
+        Pedido pedido1 = new Pedido(c1, r1, "CALLE 1");
+       
+        pedido1.agregarPizza(miPizza);
+        
+        pedido1.agregarPizza(miPizza1);    
+        pedido1.total(10); 
+
+             
     }
 }
