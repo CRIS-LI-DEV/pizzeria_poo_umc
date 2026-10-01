@@ -18,7 +18,7 @@
 
 ### 📌 Descripción
 
-Proyecto base en **Java** para la gestión de entidades de una pizzería. Contiene la clase `Pizza` con sus atributos base, encapsulamiento y métodos de visualización.
+Proyecto en **Java** que modela la gestión de pedidos de una pizzería aplicando Programación Orientada a Objetos: encapsulamiento, herencia, abstracción, polimorfismo y sobrecarga de métodos y constructores.
 
 ---
 
@@ -29,6 +29,14 @@ Para organizar el código de esta entrega, diseñamos la siguiente estructura:
 * **`Persona` (Clase Padre):** Decidimos que esta sea la clase principal porque todos los usuarios de la pizzería comparten datos básicos. Aquí centralizamos atributos comunes como el RUT, nombre, teléfono y email.
 * **`Repartidor` (Clase Hija):** Hereda de `Persona`. Lo hicimos así porque un repartidor tiene los datos personales básicos, pero le agregamos atributos exclusivos de su trabajo, como el vehículo y la patente para hacer los despachos.
 * **`Cliente` (Clase Hija):** También hereda de `Persona`. Comparte los datos base del padre, pero le añadimos el atributo propio de `direccion`, que es necesario para saber dónde enviarle su pedido.
+
+### 🍕 Clases del Negocio
+
+Además de la jerarquía de personas, el sistema cuenta con las siguientes clases:
+
+* **`Pizza`:** Representa un producto del menú con su nombre y precio. La mantuvimos como una clase independiente, sin herencia, porque todas las pizzas comparten la misma estructura y solo cambian sus datos. Valida que el nombre no esté vacío y que el precio no sea negativo.
+* **`Pedido`:** Es la clase que conecta todo el sistema. Asocia a un `Cliente` y a un `Repartidor`, y guarda las pizzas solicitadas. Decidimos que calcule el total con `total()` y `total(porcentaje)` (sobrecarga de métodos), para poder cobrar con o sin descuento reutilizando la misma lógica.
+* **`Main`:** Clase de demostración que crea un cliente, un repartidor y un pedido con varias pizzas, y muestra el resumen y los totales por consola.
 
 ---
 
