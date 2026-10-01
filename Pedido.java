@@ -25,7 +25,7 @@ public class Pedido {
             this.contadorDePizzas++;
             return true;
         } else {
-            System.out.println("Error: Límite máximo de pizzas alcanzado (" + MAX_PIZZAS + ").");
+            System.out.println("Error: Limite máximo de pizzas alcanzado (" + MAX_PIZZAS + ").");
             return false;
         }
     }

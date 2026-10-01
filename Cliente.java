@@ -33,7 +33,7 @@ public class Cliente extends Persona {
     }
 
     public void realizarPedido() {
-        System.out.println(getNombre() + " solicitó envío a: " + this.direccion);
+        System.out.println(getNombre() + " solicito envio a: " + this.direccion);
     }
 
     @Override

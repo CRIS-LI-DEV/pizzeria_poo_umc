@@ -2,7 +2,7 @@ public class Main {
     public static void main(String[] args) {
         // 1. Instanciamos Cliente y Repartidor
         Cliente cliente = new Cliente("18.456.789-0", "Matias Silva", "987654321", "matias@mail.com", "Av. Libertad 1250, Vina del Mar");
-        Repartidor repartidor = new Repartidor("15.123.456-7", "Andrés Morales", "912345678", "andres@mail.com", "Moto Honda CB125", "AB-1234");
+        Repartidor repartidor = new Repartidor("15.123.456-7", "Andres Morales", "912345678", "andres@mail.com", "Moto Honda CB125", "AB-1234");
 
         // 2. Creamos el pedido asociando a ambos
         Pedido pedido = new Pedido(cliente, repartidor, cliente.getDireccion());

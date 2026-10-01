@@ -52,7 +52,7 @@ public class Repartidor extends Persona {
 
     public void registrarEntrega() {
         this.pedidosEntregados++;
-        System.out.println(getNombre() + " entregó un pedido. Total entregados: " + this.pedidosEntregados);
+        System.out.println(getNombre() + " entrego un pedido. Total entregados: " + this.pedidosEntregados);
     }
 
     @Override
