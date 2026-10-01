@@ -1,14 +1,14 @@
-public class Persona {
+public abstract class Persona {
     private String rut;
     private String nombre;
     private String telefono;
     private String email;
 
     public Persona() {
-        this.rut = "";
-        this.nombre = "Sin Nombre";
-        this.telefono = "";
-        this.email = "";
+        this.rut = "S/R";
+        this.nombre = "Anónimo";
+        this.telefono = "No registrado";
+        this.email = "No registrado";
     }
 
     public Persona(String rut, String nombre, String telefono, String email) {
@@ -22,12 +22,16 @@ public class Persona {
         this(rut, nombre, telefono, "No registrado");
     }
 
+    // Método abstracto obligatorio
+    public abstract String getTipoPersona();
+
+    // Getters y Setters con validaciones
     public String getRut() {
         return rut;
     }
 
     public void setRut(String rut) {
-        if (rut != null && !rut.trim().isEmpty()){
+        if (rut != null && !rut.trim().isEmpty()) {
             this.rut = rut.trim();
         } else {
             this.rut = "S/R";
@@ -70,8 +74,9 @@ public class Persona {
         }
     }
 
+    // Métodos de comportamiento
     public void mostrarContacto() {
-        System.out.println("=== Ficha de Contacto ===");
+        System.out.println("=== Ficha de Contacto (" + getTipoPersona() + ") ===");
         System.out.println("Nombre:   " + this.nombre);
         System.out.println("RUT:      " + this.rut);
         System.out.println("Teléfono: " + this.telefono);
@@ -82,9 +87,8 @@ public class Persona {
         return this.telefono != null && !this.telefono.equals("No registrado") && this.telefono.length() >= 8;
     }
 
+    @Override
     public String toString() {
-        return "RUT: " + rut + " | Nombre: " + nombre + " | Teléfono: " + telefono + " | Email: " + email;
+        return "[" + getTipoPersona() + "] RUT: " + rut + " | Nombre: " + nombre + " | Teléfono: " + telefono + " | Email: " + email;
     }
-
- 
 }

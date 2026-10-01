@@ -1,31 +1,20 @@
 public class Pizza {
-    // Atributos
     private String nombre;
-    private String tamano;
     private double precio;
 
-    // Constructor
-    public Pizza(String nombre, String tamano, double precio) {
-        this.nombre = nombre;
-        this.tamano = tamano;
-        this.precio = precio;
+    public Pizza(String nombre, double precio) {
+        this.nombre = (nombre != null && !nombre.trim().isEmpty()) ? nombre.trim() : "Margarita";
+        this.precio = (precio >= 0) ? precio : 0.0;
     }
 
-    // Getters y Setters
     public String getNombre() {
         return nombre;
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getTamano() {
-        return tamano;
-    }
-
-    public void setTamano(String tamano) {
-        this.tamano = tamano;
+        if (nombre != null && !nombre.trim().isEmpty()) {
+            this.nombre = nombre.trim();
+        }
     }
 
     public double getPrecio() {
@@ -33,14 +22,13 @@ public class Pizza {
     }
 
     public void setPrecio(double precio) {
-        this.precio = precio;
+        if (precio >= 0) {
+            this.precio = precio;
+        }
     }
 
-  
-    public void mostrarInfo() {
-        System.out.println("--- Detalle de la Pizza ---");
-        System.out.println("Variedad: " + nombre);
-        System.out.println("Tamaño:   " + tamano);
-        System.out.println("Precio:   $" + precio);
+    @Override
+    public String toString() {
+        return nombre + " ($" + (int) precio + ")";
     }
 }

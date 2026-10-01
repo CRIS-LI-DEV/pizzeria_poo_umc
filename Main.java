@@ -1,39 +1,26 @@
 public class Main {
     public static void main(String[] args) {
-        
-        Pizza miPizza = new Pizza("Pepperoni Especial", "Familiar", 12990.0);
-        Pizza miPizza1 = new Pizza("Pepperoni CARNE", "Familiar", 12990.0);
+        // 1. Instanciamos Cliente y Repartidor
+        Cliente cliente = new Cliente("18.456.789-0", "Matias Silva", "987654321", "matias@mail.com", "Av. Libertad 1250, Viña del Mar");
+        Repartidor repartidor = new Repartidor("15.123.456-7", "Andrés Morales", "912345678", "andres@mail.com", "Moto Honda CB125", "AB-1234");
 
-      
-        miPizza.mostrarInfo();
+        // 2. Creamos el pedido asociando a ambos
+        Pedido pedido = new Pedido(cliente, repartidor, cliente.getDireccion());
 
-        System.out.println("hice un cambio");
+        // 3. Agregamos pizzas al pedido
+        pedido.agregarPizza(new Pizza("Napolitana Familiar", 10990));
+        pedido.agregarPizza(new Pizza("Pepperoni Mediana", 8990));
+        pedido.agregarPizza(new Pizza("Cuatro Quesos Individual", 6490));
 
-        Persona p1 = new Persona("12.345.678-9", "  Carlos Muñoz  ", "9654321", "carlos@example.com");
-        p1.mostrarContacto();
-        System.out.println("Teléfono válido: " + p1.tieneTelefonoValido());
+        // 4. Mostramos información en consola
+        pedido.mostrarDetalle();
 
-        Repartidor r1 = new Repartidor("11.222.333-4", "Diego Becerra", "912345678", "diego@umc.com", "Moto", "AB-1234");
-        r1.mostrarContacto();
-        r1.registrarEntrega();
+        System.out.println("Pizzas que lleva el pedido: " + pedido.cuantasPizzasLleva());
+        System.out.println("Total a pagar (sin dcto):   $" + (int) pedido.total());
+        System.out.println("Total con 15% de descuento: $" + (int) pedido.total(15));
 
-                Cliente c1 = new Cliente("19.123.456-7", "Victor Torres", "998877665", "victor@umc.com", "Av. Santa Rosa N° 123 Puente Alto");
-        c1.mostrarContacto();
-        c1.realizarPedido();
-        System.out.println(c1.toString());
-
-
-
-
-
-
-        Pedido pedido1 = new Pedido(c1, r1, "CALLE 1");
-       
-        pedido1.agregarPizza(miPizza);
-        
-        pedido1.agregarPizza(miPizza1);    
-        pedido1.total(10); 
-
-             
+        System.out.println();
+        cliente.realizarPedido();
+        repartidor.registrarEntrega();
     }
 }

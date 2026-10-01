@@ -1,24 +1,37 @@
 public class Repartidor extends Persona {
-    // Atributos propios
     private String vehiculo;
     private String patente;
     private int pedidosEntregados;
 
-    // Constructor
-    public Repartidor(String rut, String nombre, String telefono, String email, String vehiculo, String patente) {
-        super(rut, nombre, telefono, email);
-        this.vehiculo = vehiculo;
-        this.patente = patente;
+    public Repartidor() {
+        super();
+        this.vehiculo = "No especificado";
+        this.patente = "S/P";
         this.pedidosEntregados = 0;
     }
 
-    // Getters y Setters
+    public Repartidor(String rut, String nombre, String telefono, String email, String vehiculo, String patente) {
+        super(rut, nombre, telefono, email);
+        setVehiculo(vehiculo);
+        setPatente(patente);
+        this.pedidosEntregados = 0;
+    }
+
+    @Override
+    public String getTipoPersona() {
+        return "Repartidor";
+    }
+
     public String getVehiculo() {
         return vehiculo;
     }
 
     public void setVehiculo(String vehiculo) {
-        this.vehiculo = vehiculo;
+        if (vehiculo != null && !vehiculo.trim().isEmpty()) {
+            this.vehiculo = vehiculo.trim();
+        } else {
+            this.vehiculo = "No especificado";
+        }
     }
 
     public String getPatente() {
@@ -26,25 +39,32 @@ public class Repartidor extends Persona {
     }
 
     public void setPatente(String patente) {
-        this.patente = patente;
+        if (patente != null && !patente.trim().isEmpty()) {
+            this.patente = patente.trim().toUpperCase();
+        } else {
+            this.patente = "S/P";
+        }
     }
 
     public int getPedidosEntregados() {
         return pedidosEntregados;
     }
 
-    // Método propio
     public void registrarEntrega() {
-        pedidosEntregados++;
-        System.out.println(getNombre() + " entregó un pedido. Van " + pedidosEntregados + " en total.");
+        this.pedidosEntregados++;
+        System.out.println(getNombre() + " entregó un pedido. Total entregados: " + this.pedidosEntregados);
     }
 
-    // Sobrescribe mostrarContacto de Persona
     @Override
     public void mostrarContacto() {
         super.mostrarContacto();
-        System.out.println("Vehículo: " + vehiculo);
-        System.out.println("Patente:  " + patente);
-        System.out.println("Pedidos entregados: " + pedidosEntregados);
+        System.out.println("Vehículo:  " + this.vehiculo);
+        System.out.println("Patente:   " + this.patente);
+        System.out.println("Entregas:  " + this.pedidosEntregados);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Vehículo: " + vehiculo + " (" + patente + ") | Entregas: " + pedidosEntregados;
     }
 }

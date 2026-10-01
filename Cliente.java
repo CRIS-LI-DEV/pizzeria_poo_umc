@@ -1,29 +1,47 @@
 public class Cliente extends Persona {
-    
-    // Atributo propio
     private String direccion;
 
-    // Constructor
-    public Cliente(String rut, String nombre, String telefono, String email, String direccion) {
-        super(rut, nombre, telefono, email);
-        this.direccion = direccion;
+    public Cliente() {
+        super();
+        this.direccion = "Sin dirección registrada";
     }
 
-    // Getters y Setters
+    public Cliente(String rut, String nombre, String telefono, String email, String direccion) {
+        super(rut, nombre, telefono, email);
+        setDireccion(direccion);
+    }
+
+    public Cliente(String rut, String nombre, String telefono, String email) {
+        this(rut, nombre, telefono, email, "Sin dirección registrada");
+    }
+
+    @Override
+    public String getTipoPersona() {
+        return "Cliente";
+    }
+
     public String getDireccion() {
         return direccion;
     }
 
     public void setDireccion(String direccion) {
-        this.direccion = direccion;
+        if (direccion != null && !direccion.trim().isEmpty()) {
+            this.direccion = direccion.trim();
+        } else {
+            this.direccion = "Sin dirección registrada";
+        }
     }
 
-    // Método propio de la clase hija
     public void realizarPedido() {
-        System.out.println(getNombre() + " solicitó envío a: " + direccion);
+        System.out.println(getNombre() + " solicitó envío a: " + this.direccion);
     }
 
-    // Método
+    @Override
+    public void mostrarContacto() {
+        super.mostrarContacto();
+        System.out.println("Dirección: " + this.direccion);
+    }
+
     @Override
     public String toString() {
         return super.toString() + " | Dirección: " + direccion;
