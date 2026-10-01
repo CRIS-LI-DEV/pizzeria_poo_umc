@@ -1,5 +1,5 @@
 public class Pedido {
-    private static final int MAX_PIZZAS = 100;
+    private  int MAX_PIZZAS = 100;
 
     private Cliente cliente;
     private Repartidor repartidor;
