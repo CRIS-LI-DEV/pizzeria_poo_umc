@@ -1,5 +1,9 @@
 public class Pedido {
-    private  int MAX_PIZZAS = 100;
+    // 1. Constante estática (Exigido en Cátedra 3)
+    private static final int MAX_PIZZAS = 100;
+
+    // 2. Atributo inmutable (Exigido en Cátedra 3)
+    private final int idPedido;
 
     private Cliente cliente;
     private Repartidor repartidor;
@@ -7,12 +11,19 @@ public class Pedido {
     private String direccion;
     private int contadorDePizzas;
 
-    public Pedido(Cliente cli, Repartidor rep, String direccion) {
+    // Constructor actualizado para recibir el idPedido
+    public Pedido(int idPedido, Cliente cli, Repartidor rep, String direccion) {
+        this.idPedido = idPedido; // Se asigna una sola vez y no cambia más
         this.cliente = cli;
         this.repartidor = rep;
         this.direccion = (direccion != null && !direccion.trim().isEmpty()) ? direccion.trim() : "Retiro en local";
         this.pizzas = new Pizza[MAX_PIZZAS];
         this.contadorDePizzas = 0;
+    }
+
+    // Getter para el ID (No lleva setter porque es final)
+    public int getIdPedido() {
+        return idPedido;
     }
 
     public boolean agregarPizza(Pizza pizza) {
@@ -56,29 +67,44 @@ public class Pedido {
         return cliente;
     }
 
+    // Validación 1: Evita que se inyecte un cliente nulo (Exigido en Cátedra 3 y sugerido por el profesor)
     public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+        if (cliente == null) {
+            System.out.println("Error: El cliente no puede ser nulo.");
+        } else {
+            this.cliente = cliente;
+        }
     }
 
     public Repartidor getRepartidor() {
         return repartidor;
     }
 
+    // Validación 2: Evita que se inyecte un repartidor nulo
     public void setRepartidor(Repartidor repartidor) {
-        this.repartidor = repartidor;
+        if (repartidor == null) {
+            System.out.println("Error: El repartidor no puede ser nulo.");
+        } else {
+            this.repartidor = repartidor;
+        }
     }
 
     public String getDireccion() {
         return direccion;
     }
 
+    // Validación 3: Evita direcciones vacías (Exigido en Cátedra 3 y sugerido por el profesor)
     public void setDireccion(String direccion) {
-        this.direccion = direccion;
+        if (direccion == null || direccion.trim().isEmpty()) {
+            System.out.println("Error: La dirección no puede estar vacía.");
+        } else {
+            this.direccion = direccion.trim();
+        }
     }
 
     public void mostrarDetalle() {
         System.out.println("================================");
-        System.out.println("       RESUMEN DE PEDIDO        ");
+        System.out.println("   RESUMEN DE PEDIDO #" + idPedido); // Ahora muestra el número de pedido
         System.out.println("================================");
         System.out.println("Cliente:    " + (cliente != null ? cliente.getNombre() : "Sin asignar"));
         System.out.println("Repartidor: " + (repartidor != null ? repartidor.getNombre() : "Sin asignar"));
