@@ -1,5 +1,5 @@
 public abstract class Persona {
-    private String rut;
+    private final String rut;
     private String nombre;
     private String telefono;
     private String email;
@@ -12,7 +12,7 @@ public abstract class Persona {
     }
 
     public Persona(String rut, String nombre, String telefono, String email) {
-        setRut(rut);
+        this.rut = (rut != null && !rut.trim().isEmpty()) ? rut.trim() : "S/R";
         setNombre(nombre);
         setTelefono(telefono);
         setEmail(email);
@@ -28,14 +28,6 @@ public abstract class Persona {
     // Getters y Setters con validaciones
     public String getRut() {
         return rut;
-    }
-
-    public void setRut(String rut) {
-        if (rut != null && !rut.trim().isEmpty()) {
-            this.rut = rut.trim();
-        } else {
-            this.rut = "S/R";
-        }
     }
 
     public String getNombre() {
