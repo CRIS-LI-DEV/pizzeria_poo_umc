@@ -1,8 +1,8 @@
 public class Pedido {
-    // 1. Constante estática (Exigido en Cátedra 3)
+    // 1. Constante estática
     private static final int MAX_PIZZAS = 100;
 
-    // 2. Atributo inmutable (Exigido en Cátedra 3)
+    // 2. Atributo inmutable
     private final int idPedido;
 
     private Cliente cliente;
@@ -67,7 +67,7 @@ public class Pedido {
         return cliente;
     }
 
-    // Validación 1: Evita que se inyecte un cliente nulo (Exigido en Cátedra 3 y sugerido por el profesor)
+    // Validación 1: Evita que se inyecte un cliente nulo
     public void setCliente(Cliente cliente) {
         if (cliente == null) {
             System.out.println("Error: El cliente no puede ser nulo.");
@@ -93,7 +93,7 @@ public class Pedido {
         return direccion;
     }
 
-    // Validación 3: Evita direcciones vacías (Exigido en Cátedra 3 y sugerido por el profesor)
+    // Validación 3: Evita direcciones vacías
     public void setDireccion(String direccion) {
         if (direccion == null || direccion.trim().isEmpty()) {
             System.out.println("Error: La dirección no puede estar vacía.");
@@ -104,7 +104,7 @@ public class Pedido {
 
     public void mostrarDetalle() {
         System.out.println("================================");
-        System.out.println("   RESUMEN DE PEDIDO #" + idPedido); // Ahora muestra el número de pedido
+        System.out.println("   RESUMEN DE PEDIDO #" + idPedido); // Muestra el número de pedido
         System.out.println("================================");
         System.out.println("Cliente:    " + (cliente != null ? cliente.getNombre() : "Sin asignar"));
         System.out.println("Repartidor: " + (repartidor != null ? repartidor.getNombre() : "Sin asignar"));
