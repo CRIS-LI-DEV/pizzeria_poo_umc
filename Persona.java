@@ -1,28 +1,48 @@
 public abstract class Persona {
+
+    // Constantes para valores por defecto
+    public static final String RUT_POR_DEFECTO = "S/R";
+    public static final String NOMBRE_POR_DEFECTO = "Anónimo";
+    public static final String NO_REGISTRADO = "No registrado";
+
     private final String rut;
     private String nombre;
     private String telefono;
     private String email;
 
-    public Persona() {
-        this.rut = "S/R";
-        this.nombre = "Anónimo";
-        this.telefono = "No registrado";
-        this.email = "No registrado";
-    }
-
+    /**
+     * Constructor Canónico / Principal.
+     * Centraliza la asignación y validación de atributos.
+     */
     public Persona(String rut, String nombre, String telefono, String email) {
-        this.rut = (rut != null && !rut.trim().isEmpty()) ? rut.trim() : "S/R";
+        this.rut = (rut != null && !rut.trim().isEmpty()) ? rut.trim() : RUT_POR_DEFECTO;
         setNombre(nombre);
         setTelefono(telefono);
         setEmail(email);
     }
 
+    /**
+     * Constructor secundario: sin email.
+     */
     public Persona(String rut, String nombre, String telefono) {
-        this(rut, nombre, telefono, "No registrado");
+        this(rut, nombre, telefono, NO_REGISTRADO);
     }
 
-    // Método abstracto obligatorio
+    /**
+     * Constructor secundario: datos básicos de identificación.
+     */
+    public Persona(String rut, String nombre) {
+        this(rut, nombre, NO_REGISTRADO, NO_REGISTRADO);
+    }
+
+    /**
+     * Constructor por defecto.
+     */
+    public Persona() {
+        this(RUT_POR_DEFECTO, NOMBRE_POR_DEFECTO, NO_REGISTRADO, NO_REGISTRADO);
+    }
+
+    // Método abstracto obligatorio para subclases
     public abstract String getTipoPersona();
 
     // Getters y Setters con validaciones
@@ -38,7 +58,7 @@ public abstract class Persona {
         if (nombre != null && !nombre.trim().isEmpty()) {
             this.nombre = nombre.trim();
         } else {
-            this.nombre = "Anónimo";
+            this.nombre = NOMBRE_POR_DEFECTO;
         }
     }
 
@@ -50,7 +70,7 @@ public abstract class Persona {
         if (telefono != null && !telefono.trim().isEmpty()) {
             this.telefono = telefono.trim();
         } else {
-            this.telefono = "No registrado";
+            this.telefono = NO_REGISTRADO;
         }
     }
 
@@ -62,7 +82,7 @@ public abstract class Persona {
         if (email != null && email.contains("@")) {
             this.email = email.trim();
         } else {
-            this.email = "No registrado";
+            this.email = NO_REGISTRADO;
         }
     }
 
@@ -76,7 +96,7 @@ public abstract class Persona {
     }
 
     public boolean tieneTelefonoValido() {
-        return this.telefono != null && !this.telefono.equals("No registrado") && this.telefono.length() >= 8;
+        return this.telefono != null && !this.telefono.equals(NO_REGISTRADO) && this.telefono.length() >= 8;
     }
 
     @Override
