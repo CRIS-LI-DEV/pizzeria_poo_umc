@@ -31,7 +31,7 @@ Proyecto en **Java** que modela la gestión de pedidos de una pizzería aplicand
 * **`Cliente` incorpora `realizarPedido()`** y constructores sobrecargados.
 * **`Pedido` ahora tiene un identificador único** (`idPedido`), un límite de pizzas y validaciones en sus setters.
 * **Todas las clases validan sus datos** y usan valores por defecto cuando reciben datos nulos o vacíos.
-* **`Main` fue reemplazada por una clase de prueba** de `Pizza` y sus interfaces.
+* **`Main` ahora prueba el flujo completo:** `Pizza` y sus interfaces, y un `Pedido` con `Cliente`, `Repartidor` y pizzas.
 
 ---
 
@@ -43,7 +43,7 @@ Proyecto en **Java** que modela la gestión de pedidos de una pizzería aplicand
   * Tiene **cuatro constructores** (completo, sin email, solo RUT y nombre, y vacío). Los tres secundarios reutilizan al principal con `this(...)`, que concentra la validación.
   * Los setters aplican `trim()` y usan el valor por defecto si el dato es nulo o vacío. `setEmail` además exige que contenga `@`.
   * Incluye `mostrarContacto()` y `tieneTelefonoValido()` (teléfono registrado y con al menos 8 caracteres).
-  * Al ser abstracta no se puede instanciar directamente, y obliga a las hijas a implementar `getTipoPersona()`.
+  * **¿Por qué es abstracta y no concreta?** Porque en la pizzería no existe una "persona genérica": siempre se trata de un `Cliente` o de un `Repartidor`, así que instanciar `Persona` directamente no tendría sentido. Además, el método abstracto `getTipoPersona()` obliga a cada subclase a identificarse a sí misma (devuelve "Cliente" o "Repartidor"), evitando que alguien olvide definirlo.
 * **`Repartidor` (Clase Hija):** Hereda de `Persona` y agrega los atributos propios de su trabajo.
   * Atributos nuevos: `vehiculo`, `patente` y `pedidosEntregados`.
   * Tiene dos constructores: vacío y completo.
@@ -81,7 +81,9 @@ Usamos interfaces porque describen **capacidades** que no dependen de una jerarq
   * `total()` y `total(porcentaje)` (sobrecarga de métodos) permiten cobrar con o sin descuento, reutilizando la misma lógica. El porcentaje debe estar entre 0 y 100.
   * `setCliente`, `setRepartidor` y `setDireccion` rechazan valores nulos o vacíos y conservan el valor anterior.
   * `mostrarDetalle()` imprime el resumen del pedido.
-* **`Main`:** Clase de prueba de `Pizza` y sus interfaces. Crea dos pizzas con distintos constructores, prueba `Personalizable` (cambio de tamaño y manejo de ingredientes) y `Preparable` (ciclo de preparación), y demuestra el polimorfismo usando una pizza a través de ambas interfaces.
+* **`Main`:** Clase de demostración dividida en dos partes.
+  * `probarPizzaEInterfaces()`: crea dos pizzas con distintos constructores, prueba `Personalizable` (cambio de tamaño y manejo de ingredientes) y `Preparable` (ciclo de preparación), y demuestra el polimorfismo usando una pizza a través de ambas interfaces.
+  * `probarFlujoDePedido()`: crea un `Cliente` y un `Repartidor`, los recorre como `Persona[]` (polimorfismo con la clase abstracta), arma un `Pedido` con dos pizzas, prueba los totales con y sin descuento, las validaciones de los setters y termina con `realizarPedido()` y `registrarEntrega()`.
 
 ---
 
@@ -92,7 +94,6 @@ Usamos interfaces porque describen **capacidades** que no dependen de una jerarq
 * `quitarIngrediente()` elimina solo la primera coincidencia y distingue mayúsculas de minúsculas.
 * El constructor de `Pedido` no valida cliente ni repartidor nulos (los setters sí).
 * `Pedido` usa un arreglo fijo de 100 posiciones y `mostrarDetalle()` muestra el total sin decimales.
-* `Main` aún no prueba el flujo completo de un `Pedido` con cliente, repartidor y pizzas.
 
 ---
 

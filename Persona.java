@@ -1,3 +1,9 @@
+/**
+ * Persona es abstracta porque no existe una "persona genérica" en la pizzería:
+ * siempre es un Cliente o un Repartidor. Instanciarla directamente no tendría
+ * sentido, y el método abstracto getTipoPersona() obliga a cada subclase a
+ * identificarse a sí misma, evitando que alguien olvide definirlo.
+ */
 public abstract class Persona {
 
     // Constantes para valores por defecto
