@@ -1,48 +1,40 @@
-public class PaloDeAjo implements ItemPedido, Preparable {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class PaloDeAjo implements ItemPedido, Preparable, Personalizable {
 
     public static final String NOMBRE_POR_DEFECTO = "Palos de Ajo";
     public static final String TAMANIO_POR_DEFECTO = "Porción Regular";
     public static final double PRECIO_POR_DEFECTO = 3500.0;
     public static final int TIEMPO_DEFAULT_MINUTOS = 10;
-    public static final double RECARGO_QUESO = 1500.0;
 
     private String nombre;
     private double precio;
     private String tamanio;
-    private boolean conQuesoExtra;
     private int tiempoCoccionMinutos;
     private Pizza.EstadoPreparacion estado;
+    private final List<String> ingredientes;
 
-    /**
-     * Constructor principal
-     */
-    public PaloDeAjo(String nombre, double precio, String tamanio, boolean conQuesoExtra, int tiempoCoccionMinutos) {
+    public PaloDeAjo(String nombre, double precio, String tamanio, int tiempoCoccionMinutos) {
         setNombre(nombre);
-        setTamanio(tamanio);
-        this.conQuesoExtra = conQuesoExtra;
-        
-        double precioBase = (precio >= 0) ? precio : PRECIO_POR_DEFECTO;
-        this.precio = conQuesoExtra ? precioBase + RECARGO_QUESO : precioBase;
-        
+        setPrecio(precio);
+        cambiarTamanio(tamanio);
         this.tiempoCoccionMinutos = (tiempoCoccionMinutos > 0) ? tiempoCoccionMinutos : TIEMPO_DEFAULT_MINUTOS;
         this.estado = Pizza.EstadoPreparacion.PENDIENTE;
+        this.ingredientes = new ArrayList<>();
+        this.ingredientes.add("Mantequilla de Ajo");
+        this.ingredientes.add("Orégano");
+        this.ingredientes.add("Queso Mozzarella");
     }
 
-    /**
-     * Constructor secundario
-     */
-    public PaloDeAjo(String nombre, double precio, boolean conQuesoExtra) {
-        this(nombre, precio, TAMANIO_POR_DEFECTO, conQuesoExtra, TIEMPO_DEFAULT_MINUTOS);
+    public PaloDeAjo(String nombre, double precio) {
+        this(nombre, precio, TAMANIO_POR_DEFECTO, TIEMPO_DEFAULT_MINUTOS);
     }
 
-    /**
-     * Constructor por defecto
-     */
     public PaloDeAjo() {
-        this(NOMBRE_POR_DEFECTO, PRECIO_POR_DEFECTO, TAMANIO_POR_DEFECTO, false, TIEMPO_DEFAULT_MINUTOS);
+        this(NOMBRE_POR_DEFECTO, PRECIO_POR_DEFECTO, TAMANIO_POR_DEFECTO, TIEMPO_DEFAULT_MINUTOS);
     }
-
-    // --- Métodos de la interfaz Preparable ---
 
     @Override
     public void iniciarPreparacion() {
@@ -66,19 +58,48 @@ public class PaloDeAjo implements ItemPedido, Preparable {
         return this.tiempoCoccionMinutos;
     }
 
-    // --- Métodos de la interfaz ItemPedido ---
+    @Override
+    public void agregarIngrediente(String ingrediente) {
+        if (ingrediente != null && !ingrediente.trim().isEmpty()) {
+            this.ingredientes.add(ingrediente.trim());
+        }
+    }
+
+    @Override
+    public void quitarIngrediente(String ingrediente) {
+        if (ingrediente != null) {
+            this.ingredientes.remove(ingrediente.trim());
+        }
+    }
+
+    @Override
+    public void cambiarTamanio(String nuevoTamanio) {
+        if (nuevoTamanio != null && !nuevoTamanio.trim().isEmpty()) {
+            this.tamanio = nuevoTamanio.trim();
+        } else {
+            this.tamanio = TAMANIO_POR_DEFECTO;
+        }
+    }
+
+    @Override
+    public String getTamanio() {
+        return tamanio;
+    }
+
+    @Override
+    public List<String> getIngredientes() {
+        return Collections.unmodifiableList(this.ingredientes);
+    }
 
     @Override
     public String getNombre() {
-        return nombre + " (" + tamanio + ")" + (conQuesoExtra ? " [Con Queso Extra]" : "");
+        return nombre + " (" + tamanio + ")";
     }
 
     @Override
     public double getPrecio() {
         return precio;
     }
-
-    // --- Getters y Setters ---
 
     public void setNombre(String nombre) {
         if (nombre != null && !nombre.trim().isEmpty()) {
@@ -88,26 +109,11 @@ public class PaloDeAjo implements ItemPedido, Preparable {
         }
     }
 
-    public void setTamanio(String tamanio) {
-        if (tamanio != null && !tamanio.trim().isEmpty()) {
-            this.tamanio = tamanio.trim();
+    public void setPrecio(double precio) {
+        if (precio >= 0) {
+            this.precio = precio;
         } else {
-            this.tamanio = TAMANIO_POR_DEFECTO;
-        }
-    }
-
-    public boolean isConQuesoExtra() {
-        return conQuesoExtra;
-    }
-
-    public void setConQuesoExtra(boolean conQuesoExtra) {
-        if (this.conQuesoExtra != conQuesoExtra) {
-            if (conQuesoExtra) {
-                this.precio += RECARGO_QUESO;
-            } else {
-                this.precio -= RECARGO_QUESO;
-            }
-            this.conQuesoExtra = conQuesoExtra;
+            this.precio = PRECIO_POR_DEFECTO;
         }
     }
 
@@ -117,6 +123,6 @@ public class PaloDeAjo implements ItemPedido, Preparable {
 
     @Override
     public String toString() {
-        return getNombre() + " ($" + (int) precio + ") - Estado: " + estado;
+        return getNombre() + " ($" + (int) precio + ") - Estado: " + estado + " - Ingredientes: " + ingredientes;
     }
 }

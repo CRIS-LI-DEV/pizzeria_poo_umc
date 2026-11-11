@@ -2,9 +2,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Pizza implements Preparable, Personalizable {
+public class Pizza implements Preparable, Personalizable, ItemPedido {
 
-    // Constantes por defecto neutrales
     public static final String NOMBRE_POR_DEFECTO = "Pizza Personalizada";
     public static final String TAMANIO_POR_DEFECTO = "Mediana";
     public static final double PRECIO_POR_DEFECTO = 0.0;
@@ -23,9 +22,6 @@ public class Pizza implements Preparable, Personalizable {
     private EstadoPreparacion estado;
     private final List<String> ingredientes;
 
-    /**
-     * Constructor principal
-     */
     public Pizza(String nombre, double precio, int tiempoCoccionMinutos) {
         setNombre(nombre);
         setPrecio(precio);
@@ -35,21 +31,13 @@ public class Pizza implements Preparable, Personalizable {
         this.ingredientes = new ArrayList<>();
     }
 
-    /**
-     * Constructor secundario con tiempo de cocción estándar
-     */
     public Pizza(String nombre, double precio) {
         this(nombre, precio, TIEMPO_DEFAULT_MINUTOS);
     }
 
-    /**
-     * Constructor por defecto
-     */
     public Pizza() {
         this(NOMBRE_POR_DEFECTO, PRECIO_POR_DEFECTO, TIEMPO_DEFAULT_MINUTOS);
     }
-
-    // --- Métodos de la interfaz Preparable ---
 
     @Override
     public void iniciarPreparacion() {
@@ -73,8 +61,6 @@ public class Pizza implements Preparable, Personalizable {
         return this.tiempoCoccionMinutos;
     }
 
-    // --- Métodos de la interfaz Personalizable ---
-
     @Override
     public void agregarIngrediente(String ingrediente) {
         if (ingrediente != null && !ingrediente.trim().isEmpty()) {
@@ -97,14 +83,23 @@ public class Pizza implements Preparable, Personalizable {
     }
 
     @Override
+    public String getTamanio() {
+        return tamanio;
+    }
+
+    @Override
     public List<String> getIngredientes() {
         return Collections.unmodifiableList(this.ingredientes);
     }
 
-    // --- Getters y Setters ---
-
+    @Override
     public String getNombre() {
-        return nombre;
+        return nombre + " (" + tamanio + ")";
+    }
+
+    @Override
+    public double getPrecio() {
+        return precio;
     }
 
     public void setNombre(String nombre) {
@@ -115,10 +110,6 @@ public class Pizza implements Preparable, Personalizable {
         }
     }
 
-    public double getPrecio() {
-        return precio;
-    }
-
     public void setPrecio(double precio) {
         if (precio >= 0) {
             this.precio = precio;
@@ -127,16 +118,12 @@ public class Pizza implements Preparable, Personalizable {
         }
     }
 
-    public String getTamanio() {
-        return tamanio;
-    }
-
     public EstadoPreparacion getEstado() {
         return estado;
     }
 
     @Override
     public String toString() {
-        return nombre + " [" + tamanio + "] ($" + (int) precio + ") - Estado: " + estado + " - Ingredientes: " + ingredientes;
+        return getNombre() + " ($" + (int) precio + ") - Estado: " + estado + " - Ingredientes: " + ingredientes;
     }
 }
