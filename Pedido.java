@@ -6,7 +6,7 @@ public class Pedido {
     private final int idPedido;
     private Persona cliente;
     private Persona repartidor;
-    private List<ItemPedido> items; // Lista polimórfica para Pizzas, Bebidas, Palos de Ajo, etc.
+    private List<ItemPedido> items;
     private String direccion;
 
     public Pedido(int idPedido, Persona cliente, Persona repartidor, String direccion) {
@@ -34,7 +34,6 @@ public class Pedido {
         return this.items.size();
     }
 
-    // OCP: Cálculo total delegando en la estrategia de descuento
     public double total(EstrategiaDescuento estrategia) {
         double suma = 0.0;
         for (ItemPedido item : this.items) {
