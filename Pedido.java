@@ -1,24 +1,23 @@
-public class Pedido {
-    // 1. Constante estática
-    private static final int MAX_PIZZAS = 100;
+import java.util.ArrayList;
+import java.util.List;
 
-    // 2. Atributo inmutable
+public class Pedido {
+
+    // Atributo inmutable
     private final int idPedido;
 
     private Cliente cliente;
     private Repartidor repartidor;
-    private Pizza[] pizzas;
+    private List<ItemPedido> items;
     private String direccion;
-    private int contadorDePizzas;
 
-    // Constructor actualizado para recibir el idPedido
-    public Pedido(int idPedido, Cliente cli, Repartidor rep, String direccion) {
-        this.idPedido = idPedido; // Se asigna una sola vez y no cambia más
-        this.cliente = cli;
-        this.repartidor = rep;
+    // Constructor actualizado para recibir el idPedido y inicializar la lista de ítems
+    public Pedido(int idPedido, Cliente cliente, Repartidor repartidor, String direccion) {
+        this.idPedido = idPedido;
+        this.cliente = cliente;
+        this.repartidor = repartidor;
         this.direccion = (direccion != null && !direccion.trim().isEmpty()) ? direccion.trim() : "Retiro en local";
-        this.pizzas = new Pizza[MAX_PIZZAS];
-        this.contadorDePizzas = 0;
+        this.items = new ArrayList<>();
     }
 
     // Getter para el ID (No lleva setter porque es final)
@@ -26,30 +25,24 @@ public class Pedido {
         return idPedido;
     }
 
-    public boolean agregarPizza(Pizza pizza) {
-        if (pizza == null) {
-            System.out.println("Error: No se puede agregar una pizza nula.");
+    public boolean agregarItem(ItemPedido item) {
+        if (item == null) {
+            System.out.println("Error: No se puede agregar un producto nulo.");
             return false;
         }
-        if (this.contadorDePizzas < this.pizzas.length) {
-            this.pizzas[this.contadorDePizzas] = pizza;
-            this.contadorDePizzas++;
-            return true;
-        } else {
-            System.out.println("Error: Limite máximo de pizzas alcanzado (" + MAX_PIZZAS + ").");
-            return false;
-        }
+        this.items.add(item);
+        return true;
     }
 
-    public int cuantasPizzasLleva() {
-        return this.contadorDePizzas;
+    public int cantidadItems() {
+        return this.items.size();
     }
 
     public double total(double porcentaje) {
         if (porcentaje >= 0 && porcentaje <= 100) {
             double suma = 0.0;
-            for (int i = 0; i < this.contadorDePizzas; i++) {
-                suma += this.pizzas[i].getPrecio();
+            for (ItemPedido item : this.items) {
+                suma += item.getPrecio();
             }
             double descuento = suma * (porcentaje / 100.0);
             return suma - descuento;
@@ -102,16 +95,20 @@ public class Pedido {
         }
     }
 
+    public List<ItemPedido> getItems() {
+        return items;
+    }
+
     public void mostrarDetalle() {
         System.out.println("================================");
-        System.out.println("   RESUMEN DE PEDIDO #" + idPedido); // Muestra el número de pedido
+        System.out.println("   RESUMEN DE PEDIDO #" + idPedido);
         System.out.println("================================");
         System.out.println("Cliente:    " + (cliente != null ? cliente.getNombre() : "Sin asignar"));
         System.out.println("Repartidor: " + (repartidor != null ? repartidor.getNombre() : "Sin asignar"));
         System.out.println("Dirección:  " + this.direccion);
-        System.out.println("Pizzas ordenadas (" + this.contadorDePizzas + "):");
-        for (int i = 0; i < this.contadorDePizzas; i++) {
-            System.out.println("  - " + pizzas[i]);
+        System.out.println("Productos ordenados (" + this.items.size() + "):");
+        for (ItemPedido item : this.items) {
+            System.out.println("  - " + item);
         }
         System.out.println("Total Neto: $" + (int) total());
         System.out.println("================================");
