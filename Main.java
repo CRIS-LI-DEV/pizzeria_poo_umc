@@ -101,6 +101,7 @@ public class Main {
         }
         System.out.println("Total sin descuento: $" + (int) pedido.total());
         System.out.println("Total con 10% de descuento (Patrón Strategy): $" + (int) pedido.total(new DescuentoPorcentaje(10)));
+        pedido.imprimirBoletaFinal(new DescuentoPorcentaje(10));
         System.out.println();
 
         System.out.println("--- Validaciones en Pedido ---");

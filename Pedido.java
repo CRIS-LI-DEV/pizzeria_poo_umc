@@ -8,6 +8,9 @@ public class Pedido {
     private Persona repartidor;
     private List<ItemPedido> items;
     private String direccion;
+    
+    // COMPOSICIÓN: El Pedido es dueño de su Boleta
+    private Boleta boleta;
 
     public Pedido(int idPedido, Persona cliente, Persona repartidor, String direccion) {
         this.idPedido = idPedido;
@@ -15,6 +18,9 @@ public class Pedido {
         this.repartidor = repartidor;
         this.direccion = (direccion != null && !direccion.trim().isEmpty()) ? direccion.trim() : "Retiro en local";
         this.items = new ArrayList<>();
+        
+        // COMPOSICIÓN: El contenedor (Pedido) crea su parte internamente (Boleta)
+        this.boleta = new Boleta(idPedido);
     }
 
     public int getIdPedido() {
@@ -88,5 +94,10 @@ public class Pedido {
 
     public List<ItemPedido> getItems() {
         return items;
+    }
+
+    // Método para demostrar la Composición en el Main
+    public void imprimirBoletaFinal(EstrategiaDescuento estrategia) {
+        this.boleta.mostrarBoleta(this.total(estrategia));
     }
 }
