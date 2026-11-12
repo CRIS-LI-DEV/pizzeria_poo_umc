@@ -1,18 +1,37 @@
-
 public class Bebida implements ItemPedido {
 
+    // --- Definición del Enum para los tamaños ---
+    public enum TamanioBebida {
+        INDIVIDUAL("0.5 Litros"),
+        MEDIANA("1.0 Litro"),
+        FAMILIAR("1.5 Litros"),
+        TRES_LITROS("3.0 Litros");
+
+        private final String descripcion;
+
+        TamanioBebida(String descripcion) {
+            this.descripcion = descripcion;
+        }
+
+        public String getDescripcion() {
+            return descripcion;
+        }
+    }
+
+    // --- Constantes por defecto ---
     public static final String NOMBRE_POR_DEFECTO = "Bebida Genérica";
-    public static final String TAMANIO_POR_DEFECTO = "1.5 Litros";
+    public static final TamanioBebida TAMANIO_POR_DEFECTO = TamanioBebida.FAMILIAR;
     public static final double PRECIO_POR_DEFECTO = 0.0;
 
+    // --- Atributos ---
     private String nombre;
     private double precio;
-    private String tamanio;
+    private TamanioBebida tamanio;
 
     /**
-     * Constructor principal
+     * Constructor principal con Enum
      */
-    public Bebida(String nombre, double precio, String tamanio) {
+    public Bebida(String nombre, double precio, TamanioBebida tamanio) {
         setNombre(nombre);
         setPrecio(precio);
         setTamanio(tamanio);
@@ -36,7 +55,7 @@ public class Bebida implements ItemPedido {
 
     @Override
     public String getNombre() {
-        return nombre + " (" + tamanio + ")";
+        return nombre + " (" + tamanio.getDescripcion() + ")";
     }
 
     @Override
@@ -62,20 +81,20 @@ public class Bebida implements ItemPedido {
         }
     }
 
-    public void setTamanio(String tamanio) {
-        if (tamanio != null && !tamanio.trim().isEmpty()) {
-            this.tamanio = tamanio.trim();
+    public void setTamanio(TamanioBebida tamanio) {
+        if (tamanio != null) {
+            this.tamanio = tamanio;
         } else {
             this.tamanio = TAMANIO_POR_DEFECTO;
         }
     }
 
-    public String getTamanio() {
+    public TamanioBebida getTamanio() {
         return tamanio;
     }
 
     @Override
     public String toString() {
-        return nombre + " [" + tamanio + "] ($" + (int) precio + ")";
+        return nombre + " [" + tamanio.getDescripcion() + "] ($" + (int) precio + ")";
     }
 }

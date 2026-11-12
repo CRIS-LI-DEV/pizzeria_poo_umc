@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        probarPizzaEInterfaces();
+      //  probarPizzaEInterfaces();
         probarFlujoDePedido();
     }
 
@@ -80,14 +80,15 @@ public class Main {
 
         Pizza pepperoni = new Pizza("Pepperoni", 9500);
         pepperoni.cambiarTamanio("Familiar");
-
-        Bebida bebida = new Bebida("Coca Cola", 2500, "1.5 Litros");
-
+       
+        PaloDeAjo paloAjo1 = new PaloDeAjo("Traducional", 2500);
+        Bebida bebida = new Bebida("Coca-Cola", 2000, Bebida.TamanioBebida.FAMILIAR);
         // Pedido
         Pedido pedido = new Pedido(1, cliente, repartidor, cliente.getDireccion());
         pedido.agregarItem(margarita);
         pedido.agregarItem(pepperoni);
         pedido.agregarItem(bebida);
+        pedido.agregarItem(paloAjo1);
         pedido.agregarItem(null); // Prueba de validación: se rechaza
 
         System.out.println("--- Detalle del pedido ---");
@@ -96,11 +97,12 @@ public class Main {
         System.out.println("Repartidor: " + pedido.getRepartidor().getNombre());
         System.out.println("Dirección: " + pedido.getDireccion());
         System.out.println("Productos ordenados (" + pedido.cantidadItems() + "):");
+        
         for (ItemPedido item : pedido.getItems()) {
             System.out.println("  - " + item);
         }
         System.out.println("Total sin descuento: $" + (int) pedido.total());
-        System.out.println("Total con 10% de descuento (Patrón Strategy): $" + (int) pedido.total(new DescuentoPorcentaje(10)));
+        System.out.println("Total con 10% de descuento : $" + (int) pedido.total(new DescuentoPorcentaje(10)));
         pedido.imprimirBoletaFinal(new DescuentoPorcentaje(10));
         System.out.println();
 
@@ -115,7 +117,16 @@ public class Main {
         pepperoni.iniciarPreparacion();
         pepperoni.terminarPreparacion();
 
+         paloAjo1.iniciarPreparacion();
+         paloAjo1.terminarPreparacion();
+
+
         cliente.realizarPedido();
         repartidor.registrarEntrega();
+
+
+
+
+
     }
 }
