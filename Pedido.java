@@ -7,16 +7,16 @@ public class Pedido {
     private Persona cliente;
     private Persona repartidor;
     private List<ItemPedido> items;
-    private String direccion;
+    private Direccion direccion; // <--- Ahora es un objeto de tipo Direccion
     
     // COMPOSICIÓN: El Pedido es dueño de su Boleta
     private Boleta boleta;
 
-    public Pedido(int idPedido, Persona cliente, Persona repartidor, String direccion) {
+    public Pedido(int idPedido, Persona cliente, Persona repartidor, Direccion direccion) {
         this.idPedido = idPedido;
         this.cliente = cliente;
         this.repartidor = repartidor;
-        this.direccion = (direccion != null && !direccion.trim().isEmpty()) ? direccion.trim() : "Retiro en local";
+        this.direccion = (direccion != null) ? direccion : new Direccion("Retiro en local", "", "");
         this.items = new ArrayList<>();
         
         // COMPOSICIÓN: El contenedor (Pedido) crea su parte internamente (Boleta)
@@ -80,15 +80,15 @@ public class Pedido {
         }
     }
 
-    public String getDireccion() {
+    public Direccion getDireccion() {
         return direccion;
     }
 
-    public void setDireccion(String direccion) {
-        if (direccion == null || direccion.trim().isEmpty()) {
-            System.out.println("Error: La dirección no puede estar vacía.");
+    public void setDireccion(Direccion direccion) {
+        if (direccion == null) {
+            System.out.println("Error: La dirección no puede ser nula.");
         } else {
-            this.direccion = direccion.trim();
+            this.direccion = direccion;
         }
     }
 

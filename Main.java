@@ -73,7 +73,7 @@ public class Main {
             System.out.println();
         }
 
-        // Productos del pedido (incluyendo polimorfismo con Bebida y Pizza)
+        // Productos del pedido (incluyendo polimorfismo con Bebida, Pizza y PaloDeAjo)
         Pizza margarita = new Pizza("Margarita", 8000, 10);
         margarita.agregarIngrediente("Tomate");
         margarita.agregarIngrediente("Albahaca");
@@ -83,8 +83,12 @@ public class Main {
        
         PaloDeAjo paloAjo1 = new PaloDeAjo("Traducional", 2500);
         Bebida bebida = new Bebida("Coca-Cola", 2000, Bebida.TamanioBebida.FAMILIAR);
-        // Pedido
-        Pedido pedido = new Pedido(1, cliente, repartidor, cliente.getDireccion());
+
+        // Creación del Objeto de Valor Dirección
+        Direccion direccionEnvio = new Direccion("Av. Central", "123", "Viña del Mar");
+
+        // Pedido (ahora recibe la instancia de Direccion)
+        Pedido pedido = new Pedido(1, cliente, repartidor, direccionEnvio);
         pedido.agregarItem(margarita);
         pedido.agregarItem(pepperoni);
         pedido.agregarItem(bebida);
@@ -108,7 +112,7 @@ public class Main {
 
         System.out.println("--- Validaciones en Pedido ---");
         pedido.setCliente(null);
-        pedido.setDireccion("   ");
+        pedido.setDireccion(null);
         System.out.println();
 
         System.out.println("--- Preparación y entrega ---");
@@ -117,16 +121,10 @@ public class Main {
         pepperoni.iniciarPreparacion();
         pepperoni.terminarPreparacion();
 
-         paloAjo1.iniciarPreparacion();
-         paloAjo1.terminarPreparacion();
-
+        paloAjo1.iniciarPreparacion();
+        paloAjo1.terminarPreparacion();
 
         cliente.realizarPedido();
         repartidor.registrarEntrega();
-
-
-
-
-
     }
 }
