@@ -17,7 +17,7 @@ public class Bebida implements ItemPedido {
             return descripcion;
         }
     }
-
+//lkjjlj
     // --- Constantes por defecto ---
     public static final String NOMBRE_POR_DEFECTO = "Bebida Genérica";
     public static final TamanioBebida TAMANIO_POR_DEFECTO = TamanioBebida.FAMILIAR;
