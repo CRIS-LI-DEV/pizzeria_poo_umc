@@ -1,103 +1,76 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+// SRP: Pedido coordina el carrito y ciclo de vida de la orden, delegando descuentos y emisión de boleta.
+// DIP: Depende de la abstracción ItemPedido y recibe EstrategiaDescuento por inyección de dependencias.
 public class Pedido {
+    private final int id;
 
-    private final int idPedido;
-    private Persona cliente;
-    private Persona repartidor;
-    private List<ItemPedido> items;
-    private Direccion direccion; // <--- Ahora es un objeto de tipo Direccion
-    
-    // COMPOSICIÓN: El Pedido es dueño de su Boleta
+    // RELACIÓN: Asociación — Pedido está vinculado obligatoriamente a un Cliente existente desde su creación.
+    private final Cliente cliente;
+
+    // RELACIÓN: Agregación — Repartidor existe independientemente y se asigna opcionalmente al despachar.
+    private Repartidor repartidor;
+
+    // RELACIÓN: Agregación — Pedido agrupa ítems creados externamente bajo el contrato ItemPedido.
+    private final List<ItemPedido> items;
+
+    // RELACIÓN: Composición — Pedido crea y controla el ciclo de vida interno de su propia Boleta.
     private Boleta boleta;
 
-    public Pedido(int idPedido, Persona cliente, Persona repartidor, Direccion direccion) {
-        this.idPedido = idPedido;
-        this.cliente = cliente;
-        this.repartidor = repartidor;
-        this.direccion = (direccion != null) ? direccion : new Direccion("Retiro en local", "", "");
-        this.items = new ArrayList<>();
-        
-        // COMPOSICIÓN: El contenedor (Pedido) crea su parte internamente (Boleta)
-        this.boleta = new Boleta(idPedido);
-    }
-
-    public int getIdPedido() {
-        return idPedido;
-    }
-
-    public boolean agregarItem(ItemPedido item) {
-        if (item == null) {
-            System.out.println("Error: No se puede agregar un producto nulo.");
-            return false;
-        }
-        this.items.add(item);
-        return true;
-    }
-
-    public int cantidadItems() {
-        return this.items.size();
-    }
-
-    public double total(EstrategiaDescuento estrategia) {
-        double suma = 0.0;
-        for (ItemPedido item : this.items) {
-            suma += item.getPrecio();
-        }
-        if (estrategia == null) {
-            return suma;
-        }
-        double descuento = estrategia.calcularDescuento(suma);
-        return suma - descuento;
-    }
-
-    public double total() {
-        return total(new SinDescuento());
-    }
-
-    public Persona getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Persona cliente) {
+    public Pedido(int id, Cliente cliente) {
         if (cliente == null) {
-            System.out.println("Error: El cliente no puede ser nulo.");
-        } else {
-            this.cliente = cliente;
+            throw new IllegalArgumentException("Un pedido requiere un cliente asociado.");
+        }
+        this.id = id;
+        this.cliente = cliente;
+        this.items = new ArrayList<>();
+    }
+
+    public void agregarItem(ItemPedido item) {
+        if (item != null) {
+            this.items.add(item);
         }
     }
 
-    public Persona getRepartidor() {
-        return repartidor;
+    // Agregación diferenciada: el repartidor se asigna en una etapa posterior (despacho).
+    public void asignarRepartidor(Repartidor repartidor) {
+        this.repartidor = repartidor;
     }
 
-    public void setRepartidor(Persona repartidor) {
-        if (repartidor == null) {
-            System.out.println("Error: El repartidor no puede ser nulo.");
-        } else {
-            this.repartidor = repartidor;
-        }
-    }
-
-    public Direccion getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(Direccion direccion) {
-        if (direccion == null) {
-            System.out.println("Error: La dirección no puede ser nula.");
-        } else {
-            this.direccion = direccion;
-        }
-    }
-
+    // Protección de estado mutable (Capítulo 4)
     public List<ItemPedido> getItems() {
-        return items;
+        return Collections.unmodifiableList(this.items);
     }
 
-    // Método para demostrar la Composición en el Main
-    public void imprimirBoletaFinal(EstrategiaDescuento estrategia) {
-        this.boleta.mostrarBoleta(this.total(estrategia));
+    public Cliente getCliente() { return cliente; }
+    public Repartidor getRepartidor() { return repartidor; }
+    public Boleta getBoleta() { return boleta; }
+
+    public double calcularSubtotal() {
+        double subtotal = 0.0;
+        for (ItemPedido item : items) {
+            subtotal += item.getPrecio();
+        }
+        return subtotal;
+    }
+
+    // RELACIÓN: Dependencia — Pedido utiliza temporalmente EstrategiaDescuento como parámetro sin almacenarla.
+    public double calcularTotal(EstrategiaDescuento estrategia) {
+        EstrategiaDescuento politica = (estrategia != null) ? estrategia : new SinDescuento();
+        double subtotal = calcularSubtotal();
+        return subtotal - politica.calcularDescuento(subtotal);
+    }
+
+    // Composición: la Boleta nace dentro de Pedido al confirmar el pago.
+    public void confirmarPago(EstrategiaDescuento estrategia) {
+        double totalFinal = calcularTotal(estrategia);
+        this.boleta = new Boleta(this.id);
+        System.out.println("=== RESUMEN PEDIDO #" + id + " ===");
+        System.out.println("Cliente: " + cliente);
+        System.out.println("Repartidor: " + (repartidor != null ? repartidor : "Retiro en local / Pendiente"));
+        System.out.println("Política aplicada: " + estrategia.getDescripcionDescuento());
+        this.boleta.mostrarBoleta(totalFinal);
     }
 }

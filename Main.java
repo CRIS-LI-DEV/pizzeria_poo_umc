@@ -1,130 +1,76 @@
-public class Main {
-    public static void main(String[] args) {
-      //  probarPizzaEInterfaces();
-        probarFlujoDePedido();
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+// SRP: Pedido coordina el carrito y ciclo de vida de la orden, delegando descuentos y emisión de boleta.
+// DIP: Depende de la abstracción ItemPedido y recibe EstrategiaDescuento por inyección de dependencias.
+public class Pedido {
+    private final int id;
+
+    // RELACIÓN: Asociación — Pedido está vinculado obligatoriamente a un Cliente existente desde su creación.
+    private final Cliente cliente;
+
+    // RELACIÓN: Agregación — Repartidor existe independientemente y se asigna opcionalmente al despachar.
+    private Repartidor repartidor;
+
+    // RELACIÓN: Agregación — Pedido agrupa ítems creados externamente bajo el contrato ItemPedido.
+    private final List<ItemPedido> items;
+
+    // RELACIÓN: Composición — Pedido crea y controla el ciclo de vida interno de su propia Boleta.
+    private Boleta boleta;
+
+    public Pedido(int id, Cliente cliente) {
+        if (cliente == null) {
+            throw new IllegalArgumentException("Un pedido requiere un cliente asociado.");
+        }
+        this.id = id;
+        this.cliente = cliente;
+        this.items = new ArrayList<>();
     }
 
-    private static void probarPizzaEInterfaces() {
-        System.out.println("========== PRUEBA DE PIZZA Y SUS INTERFACES ==========\n");
-
-        Pizza pizza1 = new Pizza("Cuatro Quesos", 9500, 12);
-        Pizza pizza2 = new Pizza();
-
-        System.out.println("--- Estado Inicial ---");
-        System.out.println("Pizza 1: " + pizza1);
-        System.out.println("Pizza 2: " + pizza2);
-        System.out.println();
-
-        System.out.println("--- Probando Interfaz Personalizable (Pizza 1) ---");
-        pizza1.cambiarTamanio("Familiar");
-        pizza1.agregarIngrediente("Queso Azul");
-        pizza1.agregarIngrediente("Mozzarella");
-        pizza1.agregarIngrediente("Parmesano");
-        pizza1.agregarIngrediente("Gorgonzola");
-        pizza1.agregarIngrediente("Cebolla Caramelizada");
-
-        System.out.println("Ingredientes actuales: " + pizza1.getIngredientes());
-
-        pizza1.quitarIngrediente("Cebolla Caramelizada");
-        System.out.println("Tras quitar cebolla: " + pizza1.getIngredientes());
-        System.out.println("Pizza 1 actualizada: " + pizza1);
-        System.out.println();
-
-        System.out.println("--- Probando Interfaz Preparable ---");
-        System.out.println("¿Pizza 1 lista antes de preparar?: " + pizza1.estaListo());
-        System.out.println("Tiempo estimado de cocción: " + pizza1.getTiempoCoccion() + " minutos.");
-
-        pizza1.iniciarPreparacion();
-        System.out.println("Estado actual: " + pizza1.getEstado());
-
-        pizza1.terminarPreparacion();
-        System.out.println("¿Pizza 1 lista tras hornear?: " + pizza1.estaListo());
-        System.out.println("Estado final: " + pizza1.getEstado());
-        System.out.println();
-
-        System.out.println("--- Demostración de Polimorfismo con Interfaces ---");
-        Preparable itemPreparable = pizza2;
-        Personalizable itemPersonalizable = pizza2;
-
-        itemPersonalizable.cambiarTamanio("Individual");
-        itemPersonalizable.agregarIngrediente("Jamón");
-        itemPersonalizable.agregarIngrediente("Piña");
-
-        itemPreparable.iniciarPreparacion();
-        itemPreparable.terminarPreparacion();
-
-        System.out.println("\nResultado final Pizza 2:");
-        System.out.println(pizza2);
-        System.out.println();
+    public void agregarItem(ItemPedido item) {
+        if (item != null) {
+            this.items.add(item);
+        }
     }
 
-    private static void probarFlujoDePedido() {
-        System.out.println("========== PRUEBA DEL FLUJO COMPLETO DE UN PEDIDO ==========\n");
+    // Agregación diferenciada: el repartidor se asigna en una etapa posterior (despacho).
+    public void asignarRepartidor(Repartidor repartidor) {
+        this.repartidor = repartidor;
+    }
 
-        Cliente cliente = new Cliente("12.345.678-9", "Ana Pérez", "912345678", "ana@mail.com", "Av. Central 123");
-        Repartidor repartidor = new Repartidor("98.765.432-1", "Luis Soto", "987654321", "luis@mail.com", "Moto", "abcd12");
+    // Protección de estado mutable (Capítulo 4)
+    public List<ItemPedido> getItems() {
+        return Collections.unmodifiableList(this.items);
+    }
 
-        System.out.println("--- Polimorfismo con la clase abstracta Persona ---");
-        Persona[] personas = {cliente, repartidor};
-        for (Persona persona : personas) {
-            System.out.println("Tipo: " + persona.getTipoPersona());
-            persona.mostrarContacto();
-            System.out.println("¿Teléfono válido?: " + persona.tieneTelefonoValido());
-            System.out.println();
+    public Cliente getCliente() { return cliente; }
+    public Repartidor getRepartidor() { return repartidor; }
+    public Boleta getBoleta() { return boleta; }
+
+    public double calcularSubtotal() {
+        double subtotal = 0.0;
+        for (ItemPedido item : items) {
+            subtotal += item.getPrecio();
         }
+        return subtotal;
+    }
 
-        // Productos del pedido (incluyendo polimorfismo con Bebida, Pizza y PaloDeAjo)
-        Pizza margarita = new Pizza("Margarita", 8000, 10);
-        margarita.agregarIngrediente("Tomate");
-        margarita.agregarIngrediente("Albahaca");
+    // RELACIÓN: Dependencia — Pedido utiliza temporalmente EstrategiaDescuento como parámetro sin almacenarla.
+    public double calcularTotal(EstrategiaDescuento estrategia) {
+        EstrategiaDescuento politica = (estrategia != null) ? estrategia : new SinDescuento();
+        double subtotal = calcularSubtotal();
+        return subtotal - politica.calcularDescuento(subtotal);
+    }
 
-        Pizza pepperoni = new Pizza("Pepperoni", 9500);
-        pepperoni.cambiarTamanio("Familiar");
-       
-        PaloDeAjo paloAjo1 = new PaloDeAjo("Traducional", 2500);
-        Bebida bebida = new Bebida("Coca-Cola", 2000, Bebida.TamanioBebida.FAMILIAR);
-
-        // Creación del Objeto de Valor Dirección
-        Direccion direccionEnvio = new Direccion("Av. Central", "123", "Viña del Mar");
-
-        // Pedido (ahora recibe la instancia de Direccion)
-        Pedido pedido = new Pedido(1, cliente, repartidor, direccionEnvio);
-        pedido.agregarItem(margarita);
-        pedido.agregarItem(pepperoni);
-        pedido.agregarItem(bebida);
-        pedido.agregarItem(paloAjo1);
-        pedido.agregarItem(null); // Prueba de validación: se rechaza
-
-        System.out.println("--- Detalle del pedido ---");
-        System.out.println("ID Pedido: " + pedido.getIdPedido());
-        System.out.println("Cliente: " + pedido.getCliente().getNombre());
-        System.out.println("Repartidor: " + pedido.getRepartidor().getNombre());
-        System.out.println("Dirección: " + pedido.getDireccion());
-        System.out.println("Productos ordenados (" + pedido.cantidadItems() + "):");
-        
-        for (ItemPedido item : pedido.getItems()) {
-            System.out.println("  - " + item);
-        }
-        System.out.println("Total sin descuento: $" + (int) pedido.total());
-        System.out.println("Total con 10% de descuento : $" + (int) pedido.total(new DescuentoPorcentaje(10)));
-        pedido.imprimirBoletaFinal(new DescuentoPorcentaje(10));
-        System.out.println();
-
-        System.out.println("--- Validaciones en Pedido ---");
-        pedido.setCliente(null);
-        pedido.setDireccion(null);
-        System.out.println();
-
-        System.out.println("--- Preparación y entrega ---");
-        margarita.iniciarPreparacion();
-        margarita.terminarPreparacion();
-        pepperoni.iniciarPreparacion();
-        pepperoni.terminarPreparacion();
-
-        paloAjo1.iniciarPreparacion();
-        paloAjo1.terminarPreparacion();
-
-        cliente.realizarPedido();
-        repartidor.registrarEntrega();
+    // Composición: la Boleta nace dentro de Pedido al confirmar el pago.
+    public void confirmarPago(EstrategiaDescuento estrategia) {
+        double totalFinal = calcularTotal(estrategia);
+        this.boleta = new Boleta(this.id);
+        System.out.println("=== RESUMEN PEDIDO #" + id + " ===");
+        System.out.println("Cliente: " + cliente);
+        System.out.println("Repartidor: " + (repartidor != null ? repartidor : "Retiro en local / Pendiente"));
+        System.out.println("Política aplicada: " + estrategia.getDescripcionDescuento());
+        this.boleta.mostrarBoleta(totalFinal);
     }
 }
