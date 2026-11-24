@@ -10,3 +10,4 @@ public class SinDescuento implements EstrategiaDescuento {
         return "Sin descuento aplicado";
     }
 }
+//
