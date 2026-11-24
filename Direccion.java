@@ -35,7 +35,7 @@ public class Direccion {
         this.numero = (numero != null && !numero.trim().isEmpty()) ? numero.trim() : NUMERO_POR_DEFECTO;
     }
 
-    public String getComuna() {
+    public String getComuna() { 
         return comuna;
     }
 
