@@ -50,3 +50,4 @@ public class PaloDeAjo implements ItemPedido, Preparable {
         return nombre + " ($" + (int) precio + ") [" + estado.getDescripcion() + "]";
     }
 }
+
