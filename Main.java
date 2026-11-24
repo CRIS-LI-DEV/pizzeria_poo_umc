@@ -1,76 +1,34 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+public class Main {
+    public static void main(String[] args) {
+        // 1. Asociación: Cliente y Dirección existen independientemente
+        Direccion dirCliente = new Direccion("Av. Libertad", "1240", "Viña del Mar");
+        Cliente cliente = new Cliente("18.456.789-2", "Cristián Lillo", "+56912345678", "cristian@correo.cl", dirCliente);
 
-// SRP: Pedido coordina el carrito y ciclo de vida de la orden, delegando descuentos y emisión de boleta.
-// DIP: Depende de la abstracción ItemPedido y recibe EstrategiaDescuento por inyección de dependencias.
-public class Pedido {
-    private final int id;
+        // 2. Creación de Pedido asociado al Cliente (Issue 2)
+        Pedido pedido = new Pedido(101, cliente);
 
-    // RELACIÓN: Asociación — Pedido está vinculado obligatoriamente a un Cliente existente desde su creación.
-    private final Cliente cliente;
+        // 3. Agregación y Polimorfismo mediante interfaz ItemPedido (Cap. 5 y 6)
+        ItemPedido pizza = new Pizza("Pizza Pepperoni Familiar", 12990);
+        ItemPedido palos = new PaloDeAjo("Palos de Ajo con Queso", 3990);
+        ItemPedido bebida = new Bebida("Coca-Cola", 2500, Bebida.TamanioBebida.FAMILIAR);
 
-    // RELACIÓN: Agregación — Repartidor existe independientemente y se asigna opcionalmente al despachar.
-    private Repartidor repartidor;
+        pedido.agregarItem(pizza);
+        pedido.agregarItem(palos);
+        pedido.agregarItem(bebida);
 
-    // RELACIÓN: Agregación — Pedido agrupa ítems creados externamente bajo el contrato ItemPedido.
-    private final List<ItemPedido> items;
+        // 4. Desacoplamiento DIP: Pizza y PaloDeAjo usan Preparable sin acoplarse entre sí (Issue 1)
+        Preparable prepPizza = (Preparable) pizza;
+        Preparable prepPalos = (Preparable) palos;
+        prepPizza.avanzarEstado();
+        prepPalos.avanzarEstado();
+        System.out.println("Estado cocina -> " + pizza + " | " + palos);
 
-    // RELACIÓN: Composición — Pedido crea y controla el ciclo de vida interno de su propia Boleta.
-    private Boleta boleta;
+        // 5. Agregación en despacho: se asigna Repartidor después de crear el pedido (Issue 2)
+        Repartidor repartidor = new Repartidor("19.876.543-1", "Diego Becerra", "+56987654321", "diego@correo.cl", "Moto Honda");
+        pedido.asignarRepartidor(repartidor);
 
-    public Pedido(int id, Cliente cliente) {
-        if (cliente == null) {
-            throw new IllegalArgumentException("Un pedido requiere un cliente asociado.");
-        }
-        this.id = id;
-        this.cliente = cliente;
-        this.items = new ArrayList<>();
-    }
-
-    public void agregarItem(ItemPedido item) {
-        if (item != null) {
-            this.items.add(item);
-        }
-    }
-
-    // Agregación diferenciada: el repartidor se asigna en una etapa posterior (despacho).
-    public void asignarRepartidor(Repartidor repartidor) {
-        this.repartidor = repartidor;
-    }
-
-    // Protección de estado mutable (Capítulo 4)
-    public List<ItemPedido> getItems() {
-        return Collections.unmodifiableList(this.items);
-    }
-
-    public Cliente getCliente() { return cliente; }
-    public Repartidor getRepartidor() { return repartidor; }
-    public Boleta getBoleta() { return boleta; }
-
-    public double calcularSubtotal() {
-        double subtotal = 0.0;
-        for (ItemPedido item : items) {
-            subtotal += item.getPrecio();
-        }
-        return subtotal;
-    }
-
-    // RELACIÓN: Dependencia — Pedido utiliza temporalmente EstrategiaDescuento como parámetro sin almacenarla.
-    public double calcularTotal(EstrategiaDescuento estrategia) {
-        EstrategiaDescuento politica = (estrategia != null) ? estrategia : new SinDescuento();
-        double subtotal = calcularSubtotal();
-        return subtotal - politica.calcularDescuento(subtotal);
-    }
-
-    // Composición: la Boleta nace dentro de Pedido al confirmar el pago.
-    public void confirmarPago(EstrategiaDescuento estrategia) {
-        double totalFinal = calcularTotal(estrategia);
-        this.boleta = new Boleta(this.id);
-        System.out.println("=== RESUMEN PEDIDO #" + id + " ===");
-        System.out.println("Cliente: " + cliente);
-        System.out.println("Repartidor: " + (repartidor != null ? repartidor : "Retiro en local / Pendiente"));
-        System.out.println("Política aplicada: " + estrategia.getDescripcionDescuento());
-        this.boleta.mostrarBoleta(totalFinal);
+        // 6. Dependencia, OCP y Composición (Boleta interna)
+        EstrategiaDescuento descuento = new DescuentoPorcentaje(15.0);
+        pedido.confirmarPago(descuento);
     }
 }
