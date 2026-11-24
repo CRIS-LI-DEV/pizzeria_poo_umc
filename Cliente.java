@@ -1,45 +1,24 @@
 public class Cliente extends Persona {
-    private String direccion;
+    // RELACIÓN: Asociación — Cliente mantiene una referencia a un objeto Direccion independiente.
+    private Direccion direccion;
 
     public Cliente() {
         super();
-        this.direccion = "Sin dirección registrada";
+        this.direccion = new Direccion();
     }
 
-    public Cliente(String rut, String nombre, String telefono, String email, String direccion) {
+    public Cliente(String rut, String nombre, String telefono, String email, Direccion direccion) {
         super(rut, nombre, telefono, email);
         setDireccion(direccion);
     }
 
-    public Cliente(String rut, String nombre, String telefono, String email) {
-        this(rut, nombre, telefono, email, "Sin dirección registrada");
-    }
-
     @Override
-    public String getTipoPersona() {
-        return "Cliente";
-    }
+    public String getTipoPersona() { return "Cliente"; }
 
-    public String getDireccion() {
-        return direccion;
-    }
+    public Direccion getDireccion() { return direccion; }
 
-    public void setDireccion(String direccion) {
-        if (direccion != null && !direccion.trim().isEmpty()) {
-            this.direccion = direccion.trim();
-        } else {
-            this.direccion = "Sin dirección registrada";
-        }
-    }
-
-    public void realizarPedido() {
-        System.out.println(getNombre() + " solicitó envío a: " + this.direccion);
-    }
-
-    @Override
-    public void mostrarContacto() {
-        super.mostrarContacto();
-        System.out.println("Dirección: " + this.direccion);
+    public void setDireccion(Direccion direccion) {
+        this.direccion = (direccion != null) ? direccion : new Direccion();
     }
 
     @Override
