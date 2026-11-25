@@ -65,12 +65,13 @@ public class Pedido {
 
     // Composición: la Boleta nace dentro de Pedido al confirmar el pago.
     public void confirmarPago(EstrategiaDescuento estrategia) {
-        double totalFinal = calcularTotal(estrategia);
+        EstrategiaDescuento politica = (estrategia != null) ? estrategia : new SinDescuento();
+        double totalFinal = calcularTotal(politica);
         this.boleta = new Boleta(this.id);
         System.out.println("=== RESUMEN PEDIDO #" + id + " ===");
         System.out.println("Cliente: " + cliente);
         System.out.println("Repartidor: " + (repartidor != null ? repartidor : "Retiro en local / Pendiente"));
-        System.out.println("Política aplicada: " + estrategia.getDescripcionDescuento());
+        System.out.println("Política aplicada: " + politica.getDescripcionDescuento());
         this.boleta.mostrarBoleta(totalFinal);
     }
 }
